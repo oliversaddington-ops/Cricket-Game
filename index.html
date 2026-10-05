@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#081b14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Six Ball Showdown</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="stadium-glow"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark">🏏</div>
+      <div>
+        <h1>Six Ball Showdown</h1>
+        <p>Two phones. One over each. Highest score wins.</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="soundToggle" class="sound-toggle" type="button" aria-label="Toggle sound">🔊</button>
+        <div id="connectionPill" class="connection-pill">Connecting…</div>
+      </div>
+    </header>
+
+    <section id="homeScreen" class="screen active">
+      <div class="hero-card">
+        <span class="eyebrow">LIVE 1v1 CRICKET</span>
+        <h2>Settle it in twelve balls.</h2>
+        <p>Create a private room, send the five-character code to your opponent, then battle through one six-ball innings each.</p>
+      </div>
+
+      <div class="panel login-panel">
+        <label class="field-label" for="playerName">Your name</label>
+        <input id="playerName" class="text-input" maxlength="20" autocomplete="nickname" placeholder="e.g. Ollie" />
+
+        <span class="field-label kit-label">Choose your kit</span>
+        <div id="kitPicker" class="kit-picker" aria-label="Choose kit colour">
+          <button type="button" class="kit-swatch selected" data-kit="royal" title="Royal Blue"><span></span></button>
+          <button type="button" class="kit-swatch" data-kit="scarlet" title="Scarlet"><span></span></button>
+          <button type="button" class="kit-swatch" data-kit="emerald" title="Emerald"><span></span></button>
+          <button type="button" class="kit-swatch" data-kit="gold" title="Gold"><span></span></button>
+          <button type="button" class="kit-swatch" data-kit="violet" title="Violet"><span></span></button>
+          <button type="button" class="kit-swatch" data-kit="teal" title="Teal"><span></span></button>
+        </div>
+
+        <button id="createBtn" class="primary-btn">Create match</button>
+
+        <div class="divider"><span>or join a room</span></div>
+
+        <div class="join-row">
+          <input id="roomCodeInput" class="text-input room-input" maxlength="5" inputmode="text" autocomplete="off" placeholder="ROOM CODE" />
+          <button id="joinBtn" class="secondary-btn">Join</button>
+        </div>
+        <p id="homeError" class="error-text" aria-live="polite"></p>
+      </div>
+
+      <div class="rules-grid">
+        <div class="mini-card"><b>1</b><span>Coin toss decides who bats first</span></div>
+        <div class="mini-card"><b>2</b><span>Bowler picks one bowling style per over</span></div>
+        <div class="mini-card"><b>3</b><span>Both players secretly lock choices each ball</span></div>
+        <div class="mini-card"><b>4</b><span>Six balls each, highest runs wins</span></div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="match-strip">
+        <div>
+          <span class="small-label">ROOM</span>
+          <button id="roomCodeDisplay" class="room-code" title="Copy room code">-----</button>
+        </div>
+        <div class="innings-chip" id="inningsChip">WAITING</div>
+        <button id="leaveBtn" class="ghost-btn">Leave</button>
+      </div>
+
+      <div class="scoreboard panel">
+        <div class="player-score" id="playerOneCard">
+          <span class="player-name">Player 1</span>
+          <strong class="score">0</strong>
+          <span class="wickets">0 wkts</span>
+        </div>
+        <div class="versus">VS</div>
+        <div class="player-score" id="playerTwoCard">
+          <span class="player-name">Player 2</span>
+          <strong class="score">0</strong>
+          <span class="wickets">0 wkts</span>
+        </div>
+      </div>
+
+      <div id="statusCard" class="status-card panel">
+        <div id="statusIcon" class="status-icon">⏳</div>
+        <div>
+          <h2 id="statusTitle">Waiting for opponent</h2>
+          <p id="statusText">Share your room code with the second player.</p>
+        </div>
+      </div>
+
+      <section id="matchVisualizer" class="panel visualizer-panel">
+        <div class="visualizer-topline">
+          <div>
+            <span class="small-label">Animated stadium view</span>
+            <h3 class="visualizer-title">Live Match Theatre</h3>
+          </div>
+          <div id="shotResultBadge" class="shot-result-badge">Waiting for first ball</div>
+        </div>
+
+        <div id="stadiumView" class="stadium-view">
+          <div class="crowd-rim crowd-rim-top"></div>
+          <div class="crowd-rim crowd-rim-bottom"></div>
+          <div class="floodlight floodlight-left"></div>
+          <div class="floodlight floodlight-right"></div>
+          <div class="field-mark field-mark-cover">COVER</div>
+          <div class="field-mark field-mark-midwicket">MIDWICKET</div>
+          <div class="field-mark field-mark-point">POINT</div>
+          <div class="field-mark field-mark-square">SQUARE</div>
+          <div class="field-mark field-mark-third">THIRD</div>
+          <div class="field-mark field-mark-fine">FINE LEG</div>
+          <div class="field-mark field-mark-straight">STRAIGHT</div>
+          <div class="field-mark field-mark-longon">LONG ON</div>
+          <div class="pitch-strip"></div>
+          <div class="crease crease-top"></div>
+          <div class="crease crease-bottom"></div>
+          <div id="stumpsTop" class="stumps stumps-top"><span></span><span></span><span></span></div>
+          <div id="stumpsBottom" class="stumps stumps-bottom"><span></span><span></span><span></span></div>
+          <div id="shotTrail" class="shot-trail"></div>
+          <div id="impactPulse" class="impact-pulse"></div>
+          <div id="fielderSprite" class="fielder-sprite"><span class="fielder-head"></span><span class="fielder-body"></span></div>
+          <div id="ballSprite" class="ball-sprite"></div>
+          <div id="cinematicOverlay" class="cinematic-overlay"><span id="cinematicKicker"></span><strong id="cinematicMain"></strong><small id="cinematicSub"></small></div>
+          <div id="tossOverlay" class="toss-overlay"><div id="animatedCoin" class="animated-coin"><span>6</span></div><strong id="tossResult"></strong><small id="tossSub"></small></div>
+
+          <div id="bowlerAvatar" class="cricketer bowler-avatar">
+            <div class="player-shadow"></div>
+            <div class="head"></div>
+            <div class="torso"></div>
+            <div class="arm arm-left"></div>
+            <div class="arm arm-right"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+          </div>
+
+          <div id="batterAvatar" class="cricketer batter-avatar">
+            <div class="player-shadow"></div>
+            <div class="head"></div>
+            <div class="helmet"></div>
+            <div class="torso"></div>
+            <div class="arm arm-left"></div>
+            <div class="arm arm-right"></div>
+            <div class="bat"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+          </div>
+        </div>
+
+        <div class="visualizer-footer">
+          <div id="bowlerCaption" class="mini-scoreline">Bowler: waiting…</div>
+          <div id="batterCaption" class="mini-scoreline">Batter: waiting…</div>
+          <button id="replayBtn" class="replay-btn" type="button" disabled>↻ Replay ball</button>
+        </div>
+      </section>
+
+      <div id="ballTracker" class="ball-tracker" aria-label="Ball tracker"></div>
+
+      <section id="controlsPanel" class="panel controls-panel"></section>
+
+      <section id="commentaryPanel" class="panel commentary-panel">
+        <div class="section-heading">
+          <span>Ball-by-ball</span>
+          <span id="roleBadge" class="role-badge">Spectating</span>
+        </div>
+        <div id="commentaryList" class="commentary-list">
+          <div class="empty-commentary">The first delivery will appear here.</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "Six Ball Showdown",
+  "short_name": "Six Ball",
+  "description": "A real-time two-player six-ball cricket duel for mobile browsers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06130e",
+  "theme_color": "#081b14",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
