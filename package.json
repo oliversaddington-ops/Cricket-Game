@@ -1,6 +1,6 @@
 {
   "name": "six-ball-showdown",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "description": "Animated real-time two-player six-ball cricket game for mobile browsers",
   "main": "server.js",

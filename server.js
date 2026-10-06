@@ -20,8 +20,27 @@ app.use((req, res, next) => {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1h' }));
-app.get('/health', (_req, res) => res.json({ ok: true, game: 'six-ball-showdown', version: '3.0.0' }));
+const PUBLIC_DIR = path.join(__dirname, 'public');
+const INDEX_FILE = path.join(PUBLIC_DIR, 'index.html');
+
+// Explicit homepage route for hosts such as Render. This also gives a useful
+// diagnostic response if the public bundle was not deployed with server.js.
+app.get('/', (_req, res) => {
+  res.sendFile(INDEX_FILE, (error) => {
+    if (!error || res.headersSent) return;
+    console.error('Homepage file missing:', INDEX_FILE, error.message);
+    res.status(500).type('text/plain').send('Six Ball Showdown could not find public/index.html on the server. Check the Render Root Directory and deployed repository structure.');
+  });
+});
+
+app.use(express.static(PUBLIC_DIR, { maxAge: '1h', index: false }));
+app.get('/health', (_req, res) => res.json({
+  ok: true,
+  game: 'six-ball-showdown',
+  version: '3.1.0',
+  publicDir: PUBLIC_DIR,
+  homepage: INDEX_FILE
+}));
 
 const { BOWLER_TYPES, VALID_STYLES, VALID_DIRECTIONS, VALID_KITS, simulateDelivery, resultDescription } = require('./gameLogic');
 
